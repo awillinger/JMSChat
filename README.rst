@@ -53,6 +53,31 @@ und werden mit 6 Minuspunkten benotet!
 Designüberlegung
 ================
 
+- GUI
+
+  - Großes Textfeld (mitte, oben) für alle Nachrichten in diesem Topic
+  - Einzeiliges Textfeld unten für Benutzereingabe
+  - Button rechts von Eingabefeld zum Absenden
+- Channel (JMS-Topic)
+
+  - Sender & Receiver laufen in einem extra Thread, um die GUI nicht zu blockieren
+  - Verwendung des Observer Patterns mithilfe von onMessage (bei MessageConsumer)
+    Wenn Nachricht ankommt: Aktualisierung des großen Textfeldes in der GUI
+  - Extra Thread stellt Methode zum Senden von Nachrichten zur Verfügung, Controller hat Referenz auf dessen Objekt
+- Mailbox (JMS-Queue)
+
+  - Sender & Receiver laufen wie bei Topic in einem extra Thread
+  - Wenn eine neue Nachricht (über onMessage) empfangen wurde, wird diese in einer ArrayList abgelegt
+  - Bei Abfrage der Mailbox (mithilfe des Kommandos "MAILBOX" in der GUI), wird die ArrayList ausgelesen und deren 
+    Inhalt im großen Textfeld farbig hinterlegt angezeigt.
+  - Da es auf einer IP auch mehrere Benutzer geben kann, muss der Benutzername beim Senden einer Nachricht mit 
+    angegeben werden.
+  Aufruf demnach: MAIL <benutzername>@<ip_des_benutzers> <nachricht>
+- Beenden
+  
+  Beim Beenden müssen alle offenen Verbindungen in den jeweiligen Threads geschlossen werden, anschließend kann 
+  erst das Programm beendet werden.
+
 ================
 Aufwandschätzung
 ================
