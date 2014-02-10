@@ -189,7 +189,7 @@ Quellen
 .. _8:
 
 [8]  Java JMS With A Queue Programming Reference and Examples
-     http://www.fluffycat.com/Java/JMS-With-A-Queu/
+     http://www.fluffycat.com/Java/JMS-With-A-Queue/
      zuletzt besucht am: 10.02.2014
 
 .. _9:
