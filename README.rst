@@ -186,6 +186,18 @@ Quellen
 [7]  http://www.oracle.com/technetwork/systems/middleware/jms-basics-jsp-135286.html
 	 zuletzt besucht am: 
 
+.. _8:
+
+[8]  Java JMS With A Queue Programming Reference and Examples
+     http://www.fluffycat.com/Java/JMS-With-A-Queu/
+     zuletzt besucht am: 10.02.2014
+
+.. _9:
+
+[9]  Java Message Service: Chapter 2: Developing a Simple Example
+     http://oreilly.com/catalog/javmesser/chapter/ch02.html
+     zuletzt besucht am: 10.02.2014
+
 .. header::
 
     +-------------+-------------------+------------+
