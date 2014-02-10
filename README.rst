@@ -85,6 +85,58 @@ Umsetzung
 ActiveMQ
 ~~~~~~~~
 
+Wir verwenden als Host für ActiveMQ einen von uns gemieteten vServer in Deutschland, da das Schulnetzwerk bei VMs
+sehr unzuverlässig ist.
+
+Zu aller erst muss Java installiert werden:
+
+.. code:: bash
+
+    apt-get install openjdk-7-jre-headless
+
+Nun kann ActiveMQ heruntergeladen & entpackt werden.
+Wir verwenden die bereits vorkompilierte (binäre) Variante.
+
+.. code:: bash
+
+    mkdir /root/activemq && cd /root/activemq
+    wget http://tweedo.com/mirror/apache/activemq/apache-activemq/5.9.0/apache-activemq-5.9.0-bin.tar.gz
+    tar xfvz apache-activemq-5.9.0-bin.tar.gz
+
+Anschließend wird noch die Standard Konfigurationsdatei angelegt und wie folgt bearbeitet:
+Dies wird benötigt, da Java standardmäßig IPv6 benutzt, falls es verfügbar ist.
+
+.. code:: bash
+
+    cd apache-activemq-5.9.0/bin/
+    ./activemq setup /etc/default/activemq
+    
+    vim /etc/default/activemq
+
+.. code:: plain
+
+    [..]
+    ACTIVEMQ_OPTS="$ACTIVEMQ_OPTS -Djava.net.preferIPv4Stack=true"
+    [..]
+    
+Zum Schluss kann ActiveMQ gestartet werden:
+
+.. code:: bash
+
+    ./activemq start
+
+**Ausgabe**:
+
+.. code:: bash
+
+    INFO: Loading '/etc/default/activemq'
+    INFO: Using java '/usr/bin/java'
+    INFO: Starting - inspect logfiles specified in logging.properties and log4j.properties to get details
+    INFO: pidfile created : '/root/activemq/apache-activemq-5.9.0/data/activemq-mail.f-o-g.eu.pid' (pid '2136')
+    INFO: Loading '/etc/default/activemq'
+    INFO: Using java '/usr/bin/java'
+    ActiveMQ is running (pid '2136')
+
 =======
 Testing
 =======
