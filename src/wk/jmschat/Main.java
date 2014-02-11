@@ -16,7 +16,16 @@ public class Main {
         JMSView view;
 
         optParser = new OptParser();
-        optParser.parse(args);
+        boolean success = optParser.parse(args);
+
+        if(!success) {
+            System.out.println("Commandline arguments");
+            System.out.println("\t-h <hostname>");
+            System.out.println("\t-u <username>");
+            System.out.println("\t-c <channel>");
+
+            return;
+        }
 
         model = new JMSModel(optParser);
 
