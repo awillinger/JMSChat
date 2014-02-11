@@ -1,33 +1,43 @@
 package wk.jmschat;
 
-import javax.jms.Message;
-import java.util.Set;
+import javax.jms.TextMessage;
+import java.util.*;
 
 /**
  * @author Andreas Willinger
  */
-public class JMSModel {
+public class JMSModel
+{
+    private List<ModelObserver> observers;
+	private List<TextMessage> messages;
 
-	private Message[] messages; //maybe a collection would be better, should be a thread safe one
+    private JMSOptions options;
 
-	private JMSView jMSView;
+    public JMSModel(JMSOptions options)
+    {
+        this.options = options;
 
-	private ModelObserver modelObserver;
+        this.observers = new ArrayList<ModelObserver>();
+        this.messages = Collections.synchronizedList(new ArrayList<TextMessage>());
+    }
 
-	public Set<javax.jms.TextMessage> getMessages() {
-		return null;
+	public TextMessage[] getMessages()
+    {
+		return Arrays.copyOf(this.messages.toArray(), this.messages.toArray().length, TextMessage[].class);
 	}
 
-	public void appendMessage(javax.jms.TextMessage message) {
+	public void appendMessage(TextMessage message)
+    {
+        this.messages.add(message);
 
+        for(ModelObserver m:this.observers)
+        {
+            m.update(this);
+        }
 	}
 
-	public void addObserver() {
-
-	}
-
-	public JMSModel(JMSOptions options) {
-
-	}
-
+	public void addObserver(ModelObserver m)
+    {
+        if(!this.observers.contains(m)) this.observers.add(m);
+    }
 }
