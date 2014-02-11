@@ -1,14 +1,13 @@
 package wk.jmschat;
 
-import javax.jms.JMSException;
-import javax.jms.TextMessage;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.util.Iterator;
-
 /**
+ * The JMSView class handles the frontend part of this Application, aka. interaction with the User.
+ *
  * @author Andreas Willinger
+ * @version 0.1
  */
 public class JMSView
         extends  JFrame
@@ -46,9 +45,12 @@ public class JMSView
         this.txtCommand = new JTextField("");
         this.bSend = new JButton("Senden");
 
+        // make the main content box a bit more pretty
         this.txtContent.setBorder(new EmptyBorder(8,8,8,8));
-        this.txtContent.setBackground(new Color(200,200,200));
+        this.txtContent.setBackground(new Color(140,140,140));
         this.txtContent.setForeground(new Color(255,255,255));
+        this.txtContent.setFont(new Font("Arial", Font.ITALIC, 14));
+        this.txtContent.setEditable(false);
         this.txtCommand.setPreferredSize(new Dimension(450, 30));
 
         this.bSend.addActionListener(this.topicControl);
@@ -65,7 +67,9 @@ public class JMSView
         this.add(p1, BorderLayout.SOUTH);
 
         this.getRootPane().setDefaultButton(this.bSend);
+        this.model.addObserver(this);
 
+        // this will also establish the connection to the chatserver
         tTopic.start();
         tMail.start();
 
@@ -74,36 +78,24 @@ public class JMSView
 
 	/**
 	 * @see ModelObserver#update(JMSModel)
-	 * 
-	 *  
 	 */
 	public void update(JMSModel model)
     {
         this.txtContent.setText("");
-        TextMessage[] messages = model.getMessages();
+        String[] messages = model.getMessages();
 
         String updated = "";
-        try
-        {
-            for(TextMessage text:messages)
-            {
-                updated += text.getText();
-                updated += "\n";
-            }
-        }
-        catch(JMSException e)
-        {
-            updated = "*** Fehler beim Abrufen der Nachrichten: "+e.getMessage();
-        }
 
+        for(String text:messages)
+        {
+            updated += text;
+            updated += "\n";
+        }
         this.txtContent.setText(updated);
 	}
 
-
 	/**
 	 * @see Text#getText()
-	 * 
-	 *  
 	 */
 	public String getText()
     {
