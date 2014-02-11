@@ -15,11 +15,6 @@ public class JMSView extends javax.swing.JFrame implements ModelObserver, Text {
 
 	}
 
-	public void update() {
-
-	}
-
-
 	/**
 	 * @see ModelObserver#update(JMSModel)
 	 * 
