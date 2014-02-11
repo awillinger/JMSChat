@@ -2,6 +2,7 @@ package wk.jmschat;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
+import com.beust.jcommander.ParameterException;
 
 /**
  * Parses the Options provided by Main.
@@ -29,11 +30,25 @@ public class OptParser implements JMSOptions {
      *             -h <hostname>
      *             -u <username>
      *             -c <channel>
+     * @return true if parsing was successfull,
      */
-	public void parse(String [] args) {
-        new JCommander(this, args);
+	public boolean parse(String [] args) {
+        this.host = null;
+        this.username = null;
+        this.channel = null;
+        try {
+            new JCommander(this, args);
+        } catch (ParameterException pe) {
+            return false;
+        }
+
+        if(this.host==null|| this.username==null|| this.channel==null) {
+            return false;
+        }
 
         //todo retrieve ip
+
+        return true;
 	}
 
 	/**
