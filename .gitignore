@@ -8,3 +8,6 @@
 # IntelliJ  IDEA #
 .idea/
 *.iml
+
+# Astah backup #
+*.asta.bak
