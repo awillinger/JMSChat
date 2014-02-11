@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="JmsChat" default="jar" basedir=".">
+    <tstamp>
+        <format property="TODAY"
+                pattern="yyyyMMdd"
+                locale="en,UK"/>
+    </tstamp>
+
+    <property name="authors.name"   value="Willinger-Klepp" />
+    <property name="version"        value="${TODAY}" />
+    <property name="src.dir"	    value="src" />
+    <property name="test.src.dir"   value="test" />
+    <property name="lib.dir"        value="lib" />
+    <property name="out.dir"        value="out" />
+    <property name="tmp.dir"        value="${out.dir}/tmp" />
+    <property name="main.class"     value="wk.jmschat.Main" />
+    <property name="proto.in"       value="README.rst" />
+    <property name="proto.name"     value="Document.pdf" />
+    <property name="build.dir"	    value="${out.dir}/build" />
+    <property name="build.test.dir" value="${build.dir}" />
+    <property name="proto.dir"      value="${build.dir}" />
+    <property name="jd.dir"         value="${build.dir}/javadoc" />
+    <property name="jar.dir"        value="${out.dir}" />
+    <property name="jar.name"       value="${ant.project.name}_${version}_${authors.name}" />
+    <property name="gitlog.dir"     value="${build.dir}" />
+    <property name="gitlog.name"    value="git.log" />
+    <property name="test.report.dir" value="${out.dir}/test-report" />
+
+    <path id="lib.classpath">
+        <pathelement path="${lib.dir}/activemq-all-5.8.0.jar" />
+        <pathelement path="${lib.dir}/jcommander-1.32.jar" />
+        <pathelement location="${build.dir}" />
+    </path>
+
+    <target name="compile" description="Compile project.">
+        <mkdir dir="${build.dir}" />
+        <javac srcdir="${src.dir}" destdir="${build.dir}" classpathref="lib.classpath" debug="true" deprecation="true" includeantruntime="false" />
+    </target>
+
+    <target name="clean" description="Clean build products.">
+        <delete dir="${build.dir}" />
+    </target>
+
+    <target name="rebuild" depends="clean, compile" description="Clean and build products." />
+
+    <target name="create-jd" description="Creates the Javadocs">
+        <mkdir dir="${jd.dir}"/>
+        <javadoc sourcepath="${src.dir}" destdir="${jd.dir}" classpathref="lib.classpath">
+        </javadoc>
+    </target>
+
+    <target name="clean-jd" description="Clean javadocs">
+        <delete dir="${jd.dir}" />
+    </target>
+
+    <target name="rebuild-jd" depends="clean-jd, create-jd" description="Clean and build Javadoc" />
+
+    <target name="create-protocol" description="Creates the protocol">
+        <mkdir dir="${proto.dir}"/>
+        <exec executable="rst2pdf">
+            <arg value="-o" />
+            <arg value="${proto.dir}/${proto.name}" />
+            <arg value="${proto.in}" />
+        </exec>
+    </target>
+
+    <target name="clean-protocol" description="Clean protocol">
+        <delete file="${proto.dir}/${proto.name}" />
+    </target>
+
+    <target name="rebuild-protocol" depends="clean-protocol, create-protocol" description="Clean and build protocol" />
+
+    <target name="git-log" description="generates git log">
+        <mkdir dir="${gitlog.dir}"/>
+        <exec executable="git">
+            <arg value="log" />
+            <arg value="--stat" />
+            <redirector output="${gitlog.dir}/${gitlog.name}" />
+        </exec>
+    </target>
+
+    <target name="jar" depends="rebuild, rebuild-jd, rebuild-protocol, git-log" description="Creates a jar for distribution" >
+        <delete file="${jar.dir}/${jar.name}.jar" />
+        <copy todir="${build.dir}/src">
+            <fileset dir="${src.dir}" />
+        </copy>
+
+        <copy todir="${build.dir}">
+            <fileset dir="res" />
+        </copy>
+
+        <copy file="build.xml" todir="${build.dir}" />
+
+        <jar destfile="${jar.dir}/${jar.name}.jar">
+            <fileset dir="${build.dir}"/>
+            <manifest>
+                <attribute name="Class-Path" value=". lib/activemq-all-5.8.0.jar lib/jcommander-1.32.jar" />
+                <attribute name="Main-Class" value="wk.jmschat.Main" />
+            </manifest>
+        </jar>
+    </target>
+    <target name="zip" depends="jar">
+        <mkdir dir="${out.dir}/lib/lib" />
+        <copy todir="${out.dir}/lib/lib">
+            <fileset dir="${lib.dir}" />
+        </copy>
+        <zip destfile="${jar.dir}/${jar.name}.zip">
+            <file file="${jar.dir}/${jar.name}.jar" />
+            <fileset dir="${out.dir}/lib" />
+        </zip>
+    </target>
+</project>
