@@ -26,7 +26,7 @@ public class JMSModel {
 
 	}
 
-	public JMSModel(String host, String username, String channel) {
+	public JMSModel(JMSOptions options) {
 
 	}
 

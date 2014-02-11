@@ -122,6 +122,8 @@ Zeitaufzeichnung
 +----------------------------+--------------+---------+---------+-----------+--------------------+
 | Junit stubs                |  2013-02-11  |  15:35  |  16:00  |     0:25  | Jakob Klepp        |
 +----------------------------+--------------+---------+---------+-----------+--------------------+
+| Argumentparser             |  2013-02-11  |  16:00  |  16:45  |     0:45  | Jakob Klepp        |
++----------------------------+--------------+---------+---------+-----------+--------------------+
 
 =========
 Umsetzung
@@ -182,6 +184,54 @@ Zum Schluss kann ActiveMQ gestartet werden:
     INFO: Loading '/etc/default/activemq'
     INFO: Using java '/usr/bin/java'
     ActiveMQ is running (pid '2136')
+
+~~~~~~~~~~
+JCommander
+~~~~~~~~~~
+
+Zum parsen von Kommandozeilen Argumenten verwenden wir JCommander.
+Die Entscheidung fiel auf JCommander da er noch aktiv weiter entwickelt wird
+und die einbindung nur eine Minimale menge Code benötigt.
+
+Verwendungsbeispiel aus der offiziellen Dokumentation _[10]
+
+**Argumentparser**
+
+.. code:: java
+
+    public class JCommanderTest {
+        @Parameter
+        public List<String> parameters = Lists.newArrayList();
+
+        @Parameter(names = { "-log", "-verbose" }, description = "Level of verbosity")
+        public Integer verbose = 1;
+
+        @Parameter(names = "-groups", description = "Comma-separated list of group names to be run")
+        public String groups;
+
+        @Parameter(names = "-debug", description = "Debug mode")
+        public boolean debug = false;
+
+        @DynamicParameter(names = "-D", description = "Dynamic parameters go here")
+        public Map<String, String> dynamicParams = new HashMap<String, String>();
+
+    }
+
+**Verwendung des Parsers**
+
+.. code:: java
+
+    JCommanderTest jct = new JCommanderTest();
+    String[] argv = { "-log", "2", "-groups", "unit1,unit2,unit3",
+                        "-debug", "-Doption=value", "a", "b", "c" };
+    new JCommander(jct, argv);
+
+    Assert.assertEquals(2, jct.verbose.intValue());
+    Assert.assertEquals("unit1,unit2,unit3", jct.groups);
+    Assert.assertEquals(true, jct.debug);
+    Assert.assertEquals("value", jct.dynamicParams.get("option"));
+    Assert.assertEquals(Arrays.asList("a", "b", "c"), jct.parameters);
+
 
 =======
 Testing
@@ -244,12 +294,18 @@ Quellen
      http://oreilly.com/catalog/javmesser/chapter/ch02.html
      zuletzt besucht am: 10.02.2014
 
+.. _10:
+
+[10] JCommander
+     http://www.jcommander.org/
+     zuletzt besucht am: 11.02.2014
+
 .. header::
 
     +-------------+-------------------+------------+
     | Titel       | Autor             | Date       |
     +=============+===================+============+
-    | ###Title### | Andreas Willinger | 10.02.2014 |
+    | ###Title### | Andreas Willinger | 11.02.2014 |
     |             | -- Jakob Klepp    |            |
     +-------------+-------------------+------------+
 

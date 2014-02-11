@@ -1,28 +1,46 @@
 package wk.jmschat;
 
+import com.beust.jcommander.JCommander;
+import com.beust.jcommander.Parameter;
+
 /**
+ * Parses the Options provided by Main.
+ *
  * @author Jakob Klepp
  */
 public class OptParser implements JMSOptions {
+    /** Host address */
+    @Parameter(names = { "-h" }, description = "Host address, looks like tcp://hostname:port")
+	public String host;
 
-	private String host;
+    /** Username, will be displayed in chat */
+    @Parameter(names = { "-u" }, description = "Username")
+    public String username;
 
-	private String username;
+    /** Channel name */
+    @Parameter(names = { "-c" }, description = "Channel name")
+    public String channel;
 
-	private String channel;
+    /** public ip address of the client */
+    private String ip;
 
-	private String ip;
+    /**
+     * @param args Commandline arguments
+     *             -h <hostname>
+     *             -u <username>
+     *             -c <channel>
+     */
+	public void parse(String [] args) {
+        new JCommander(this, args);
 
-	public void parse(String args) {
-
+        //todo retrieve ip
 	}
-
 
 	/**
 	 * @see JMSOptions#getHost()
 	 */
 	public String getHost() {
-		return null;
+		return this.host;
 	}
 
 
@@ -30,7 +48,7 @@ public class OptParser implements JMSOptions {
 	 * @see JMSOptions#getUsername()
 	 */
 	public String getUsername() {
-		return null;
+		return this.username;
 	}
 
 
@@ -38,7 +56,7 @@ public class OptParser implements JMSOptions {
 	 * @see JMSOptions#getChannel()
 	 */
 	public String getChannel() {
-		return null;
+		return this.channel;
 	}
 
 
@@ -46,7 +64,7 @@ public class OptParser implements JMSOptions {
 	 * @see JMSOptions#getIp()
 	 */
 	public String getIp() {
-		return null;
+		return this.ip;
 	}
 
 }
