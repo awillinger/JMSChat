@@ -3,6 +3,9 @@ package wk.jmschat;
 import javax.jms.*;
 import java.awt.event.ActionEvent;
 
+/**
+ * @author Andreas Willinger
+ */
 public class JMSTopicControl implements javax.jms.MessageListener, Runnable, java.awt.event.ActionListener {
 
 	private javax.jms.Connection topicConnection;

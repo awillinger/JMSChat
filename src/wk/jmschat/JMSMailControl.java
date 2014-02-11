@@ -6,6 +6,9 @@ import javax.jms.MessageListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * @author Jakob Klepp
+ */
 public class JMSMailControl implements MessageListener, Runnable, ActionListener {
 
 	private javax.jms.Connection mailConnection;

@@ -1,5 +1,8 @@
 package wk.jmschat;
 
+/**
+ * @author Jakob Klepp
+ */
 public class OptParser implements JMSOptions {
 
 	private String host;

@@ -1,18 +1,15 @@
 package wk.jmschat;
 
+/**
+ * @author Andreas Willinger
+ */
 public class JMSView extends javax.swing.JFrame implements ModelObserver, Text {
 
-	private JMSModel jMSModel;
-
-	private ChatControl chatControl;
+	private JMSModel model;
 
 	private JMSTopicControl jMSTopicControl;
 
 	private JMSMailControl jMSMailControl;
-
-	private JMSModel jMSModel;
-
-	private JMSModel jMSModel;
 
 	public JMSView(JMSModel model, JMSOptions options) {
 

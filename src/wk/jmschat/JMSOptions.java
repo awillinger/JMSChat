@@ -1,5 +1,8 @@
 package wk.jmschat;
 
+/**
+ * @author Jakob Klepp
+ */
 public interface JMSOptions {
 
 	public abstract String getHost();
