@@ -59,9 +59,20 @@
         <mkdir dir="${proto.dir}"/>
         <exec executable="rst2pdf">
             <arg value="-o" />
-            <arg value="${proto.dir}/${proto.name}" />
+            <arg value="${proto.dir}/${proto.in}.pdf" />
             <arg value="${proto.in}" />
         </exec>
+        <exec executable="gs">
+            <arg value="-q" />
+            <arg value="-sPAPERSIZE=a4" />
+            <arg value="-dNOPAUSE" />
+            <arg value="-dBATCH" />
+            <arg value="-sDEVICE=pdfwrite" />
+            <arg value="-sOutputFile=${proto.dir}/${proto.name}" />
+            <arg value="doc/frontpage.pdf" />
+            <arg value="${proto.dir}/${proto.in}.pdf" />
+        </exec>
+        <delete file="${proto.dir}/${proto.in}.pdf" />
     </target>
 
     <target name="clean-protocol" description="Clean protocol">
