@@ -9,5 +9,8 @@
 .idea/
 *.iml
 
-# Astah backup #
+# Astah #
 *.asta.bak
+*.asta.lock
+*.png.bak
+*.png.lock
