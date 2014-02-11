@@ -195,6 +195,24 @@ Zum Schluss kann ActiveMQ gestartet werden:
     INFO: Using java '/usr/bin/java'
     ActiveMQ is running (pid '2136')
 
+
+~~~~~~~~~~~~~~~~~~~~~~
+Synchronized ArrayList
+~~~~~~~~~~~~~~~~~~~~~~
+
+Da wir zwei verschiedene Threads für den Chatroom selbst und die Mailbox verwenden und diese auf
+dasselbe JMSModel zugreifen, müssen wir eine Thread-safe Collection verwenden.
+
+Unsere Wahl fiel dazu auf eine Synchronized ArrayList, welche wie folgt (ähnlich zu einer normalen ArrayList)
+deklariert & initialisert werden kann:
+
+.. code:: java
+
+    public List<String> myList = Collections.synchronizedList(new ArrayList<String>());
+
+Anschließend kann myList ganz normal wir eine ArrayList verwendet werden, mit dem Unterschied, dass alle
+Abfragen (einfügen, löschen, abrufen) synchronized (d.h. blocking) ablaufen.
+
 ~~~~~~~~~~
 JCommander
 ~~~~~~~~~~
