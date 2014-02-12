@@ -1,5 +1,8 @@
 package wk.jmschat.stub;
 
+import wk.jmschat.JMSModel;
+import wk.jmschat.JMSOptions;
+
 /**
  * The JMSModel class contains all data used in this Application and provides simply Methods to access/modify them.
  *
@@ -7,9 +10,11 @@ package wk.jmschat.stub;
  * @version 0.2
  */
 public class JMSModelStub
+    extends JMSModel
 {
-    public JMSModelStub(JMSOptionsStub options)
+    public JMSModelStub(JMSOptions options)
     {
+        super(options);
     }
 
     /**

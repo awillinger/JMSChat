@@ -1,5 +1,8 @@
 package wk.jmschat;
 
+import org.apache.activemq.ActiveMQConnectionFactory;
+import org.apache.log4j.Logger;
+
 import javax.jms.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -7,6 +10,16 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 /**
+ * The JMSMailControl checks user inputs for the the KEYWORDS
+ *
+ * If it detects the keyword MAIL it will send a message to the given user
+ * syntax as follows:
+ *
+ * MAIL <username>@<ip> <message>
+ *
+ * If it detects the keyword MAILBOX it will retrieve all the messages addressed
+ * to the current user (as defined in ``options``) and display them.
+ *
  * @author Jakob Klepp
  */
 public class JMSMailControl
@@ -16,28 +29,27 @@ public class JMSMailControl
     /** Words indicating some special command used by mailsystem */
     public final static String[] KEYWORDS = {"MAIL", "MAILBOX"};
 
-    /**  */
+    /** Connection to ActiveMQ */
 	private Connection mailConnection;
-    /**  */
+    /** Session to ActiveMQ */
 	private Session mailSession;
-    /**  */
-	private MessageProducer mailSender;
-    /**  */
+    /** "Mailbox" */
+    private Destination queue;
+    /** "Mailbox" */
 	private MessageConsumer mailReceiver;
-    /**  */
+    /** jms connection options */
 	private JMSOptions options;
-    /**  */
+    /** Model to push messages to */
 	private JMSModel model;
-    /**  */
+    /** source for user inputs */
 	private Text text;
 
     private boolean stoped;
 
     /**
-     *
-     * @param model
-     * @param textContainer
-     * @param options
+     * @param model Model to push messages to
+     * @param textContainer source for user inputs
+     * @param options jms connection options
      */
 	public JMSMailControl(JMSModel model, Text textContainer, JMSOptions options) {
         this.model = model;
@@ -45,8 +57,20 @@ public class JMSMailControl
         this.options = options;
 	}
 
+    /**
+     * Shuts the mail client down.
+     */
 	public void stop() {
         stoped = true;
+        try {
+            mailReceiver.close();
+            mailSession.close();
+            mailConnection.close();
+        } catch (JMSException e1) {
+            //todo proper exception handling
+            //maybe logging
+            System.out.println(e1.getMessage());
+        }
 	}
 
     /**
@@ -57,21 +81,50 @@ public class JMSMailControl
     @Override
     public void actionPerformed(ActionEvent e) {
         String text = this.text.getText();
-        if(text.startsWith("MAILBOX")) {
-            //todo push MAILBOX into JMSModel
-            //todo clear Queue
+        String[] words = text.split(" ");
+        //check the mailbox
+        if(words[0].equals("MAILBOX")) {
+            //push MAILBOX into JMSModel
+            while (true) {
+                try {
+                    //timout of 500 ms
+                    Message message = mailReceiver.receive(500);
+                    //mailbox empty
+                    if(message==null) {
+                        break;
+                    }
+                    //append message to model
+                    if(message instanceof TextMessage){
+                        TextMessage textMessage = (TextMessage) message;
+                        this.model.appendMessage(textMessage.getText());
+                    }
+                } catch (JMSException e1) {
+                    break;
+                }
+            }
             //clear text
             this.text.clearText();
         } else
-        if(text.startsWith("MAIL")) {
-            Message m = null;
+        //send a mail
+        if(words[0].equals("MAIL")) {
+            Destination destination=null;
+            MessageProducer producer=null;
             try {
-                m = mailSession.createTextMessage(text);
-                mailSender.send(m);
+                //opening a message queue
+                destination = mailSession.createQueue(words[1]);
+                producer = mailSession.createProducer(destination);
+                //parse input string -> extract message
+                StringBuilder messageText = new StringBuilder("[" + options.getUsername() + "@" + options.getIp() + " -> Me]");
+                for(int i=2; i<words.length; i++) {
+                    messageText.append(" ")
+                               .append(words[i]);
+                }
+                TextMessage message = mailSession.createTextMessage(messageText.toString());
+                producer.send(message);
+                producer.close();
             } catch (JMSException e1) {
-                //todo proper exception handling
-                    //maybe logging
-                System.out.println(e1.getMessage());
+                Logger.getLogger(this.getClass()).info(e1.getMessage());
+                Logger.getLogger(this.getClass()).error(e1.getStackTrace());
             } finally {
                 //clear text
                 this.text.clearText();
@@ -80,16 +133,20 @@ public class JMSMailControl
     }
 
     /**
-     * Invoked when a message arrives.
-     *
-     * @param message Message in box
+     * NOT USED
+     * TODO remove
      */
     @Override
     public void onMessage(Message message) {
-        //todo append Message to Queue
-
+        this.model.appendMessage("MAIL: Nachricht erhalten");
     }
 
+    /**
+     * Shuts the connection down when the window gets closed.
+     *
+     * @see java.awt.event.WindowAdapter#windowClosing(java.awt.event.WindowEvent)
+     * @param e WindowEvent
+     */
     @Override
     public void windowClosing(WindowEvent e)
     {
@@ -98,31 +155,29 @@ public class JMSMailControl
     }
 
     /**
-     * When an object implementing interface <code>Runnable</code> is used
-     * to create a thread, starting the thread causes the object's
-     * <code>run</code> method to be called in that separately executing
-     * thread.
-     * <p/>
-     * The general contract of the method <code>run</code> is that it may
-     * take any action whatsoever.
-     *
-     * @see Thread#run()
+     * Comfort method for establishing connections
+     */
+    private void createConnection() {
+        ConnectionFactory factory = new ActiveMQConnectionFactory(options.getHost());
+        try {
+            mailConnection = factory.createConnection();
+            mailConnection.start();
+            mailSession = mailConnection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+            queue = mailSession.createQueue(options.getUsername() + "@" + options.getIp());
+            mailReceiver = mailSession.createConsumer(queue);
+            //mailReceiver.setMessageListener(this);
+        } catch (JMSException e) {
+            Logger.getLogger(this.getClass()).info(e.getMessage());
+            Logger.getLogger(this.getClass()).error(e.getStackTrace());
+        }
+    }
+
+    /**
+     * starts the mail client
      */
     @Override
     public void run() {
-        //todo establish a connection
-        while (!stoped) {
-
-        }
-        try {
-            mailReceiver.close();
-            mailSender.close();
-            mailSession.close();
-            mailConnection.close();
-        } catch (JMSException e1) {
-            //todo proper exception handling
-                //maybe logging
-            System.out.println(e1.getMessage());
-        }
+        //establish a connection
+        createConnection();
     }
 }

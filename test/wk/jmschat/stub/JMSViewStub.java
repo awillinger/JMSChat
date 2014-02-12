@@ -1,6 +1,7 @@
 package wk.jmschat.stub;
 
 import wk.jmschat.JMSModel;
+import wk.jmschat.JMSOptions;
 import wk.jmschat.Text;
 
 /**
@@ -15,7 +16,7 @@ public class JMSViewStub
 
     private String text;
 
-    public JMSViewStub(JMSModel model, JMSOptionsStub options)
+    public JMSViewStub(JMSModel model, JMSOptions options)
     {
         this.text = "test";
     }

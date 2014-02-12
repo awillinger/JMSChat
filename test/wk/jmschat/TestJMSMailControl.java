@@ -4,6 +4,9 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import wk.jmschat.stub.JMSModelStub;
+import wk.jmschat.stub.JMSOptionsStub;
+import wk.jmschat.stub.JMSViewStub;
 
 import javax.jms.Message;
 import java.awt.event.ActionEvent;
@@ -14,31 +17,32 @@ import java.awt.event.ActionEvent;
  * @author Jakob Klepp
  */
 public class TestJMSMailControl {
-    JMSModel model;
+    JMSModelStub model;
     Text text;
-    JMSOptions options;
+    JMSOptionsStub options;
 
     JMSMailControl mailControl;
     @Before
     public void before() {
-        //create JMSModel stub
-        model = ;
-        //create Text stub
-        text = ;
         //create JMSOptions stub
-        options = ;
+        options = new JMSOptionsStub();
+        //create JMSModel stub
+        model = new JMSModelStub(options);
+        //create Text stub
+        text = new JMSViewStub(model, options);
         //create an instance of the tested object
         mailControl = new JMSMailControl(model, text, options);
     }
 
     @Test
     public void test_stop() {
-        Assert.fail("Not implemented!");
+        mailControl.stop();
     }
 
     @Test
     public void test_actionPerformed(ActionEvent e) {
-        Assert.fail("Not implemented!");
+        ActionEvent event = new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "JUnit Test!");
+        mailControl.actionPerformed(event);
     }
 
     @Test
