@@ -87,6 +87,7 @@ public class JMSView
 	 */
 	public void update(JMSModel model)
     {
+        if(model == null) return;
         this.txtContent.setText("");
         String[] messages = model.getMessages();
 

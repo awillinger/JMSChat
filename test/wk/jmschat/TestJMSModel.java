@@ -1,39 +1,60 @@
 package wk.jmschat;
 
 import org.junit.*;
-
-import javax.jms.TextMessage;
-import java.util.Set;
+import wk.jmschat.stub.JMSOptionsStub;
 
 /**
  * Unittest for JMSModel
  *
  * @author Andreas Willinger
  */
-public class TestJMSModel {
+public class TestJMSModel
+{
+    private JMSModel model;
+
     @Before
-    public void before() {
-        Assert.fail("Not implemented!");
+    public void before()
+    {
+        JMSOptionsStub stub = new JMSOptionsStub();
+        this.model = new JMSModel(stub);
     }
 
     @Test
-    public Set<TextMessage> test_getMessages() {
-        Assert.fail("Not implemented!");
-        return null;
+    public void test_getMessages()
+    {
+        Assert.assertNotEquals(this.model.getMessages(), null);
     }
 
     @Test
-    public void test_appendMessage(javax.jms.TextMessage message) {
-        Assert.fail("Not implemented!");
+    public void test_appendMessage_null()
+    {
+        this.model.appendMessage(null);
+        String[] messages = this.model.getMessages();
+
+        if(messages.length > 0)
+        {
+            Assert.assertNotEquals(messages[messages.length-1], null);
+        }
     }
 
     @Test
-    public void test_addObserver() {
-        Assert.fail("Not implemented!");
+    public void test_appendMessage_notnull()
+    {
+        this.model.appendMessage("test");
+        String[] messages = this.model.getMessages();
+
+        Assert.assertEquals(messages[messages.length-1], "test");
     }
 
-    @After
-    public void after() {
-        Assert.fail("Not implemented!");
+    @Test
+    public void test_addObserver()
+    {
+        this.model.addObserver(new testObserver());
+    }
+
+    public class testObserver implements  ModelObserver
+    {
+        @Override
+        public void update(JMSModel model) {}
     }
 }
