@@ -30,6 +30,11 @@ public class JMSView
     {
         super("JMS Chat");
 
+        this.setLayout(new BorderLayout());
+        this.setSize(new Dimension(800, 600));
+        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        this.setResizable(false);
+
         this.model = model;
         this.options = options;
 
@@ -40,10 +45,6 @@ public class JMSView
 
         Thread tTopic = new Thread(this.topicControl);
         Thread tMail = new Thread(this.mailControl);
-
-        this.setLayout(new BorderLayout());
-        this.setSize(new Dimension(800, 600));
-        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         this.txtContent = new JTextArea();
         this.txtCommand = new JTextField("");
