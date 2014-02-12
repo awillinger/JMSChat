@@ -1,7 +1,5 @@
 package wk.jmschat;
 
-import sun.awt.VerticalBagLayout;
-
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -9,7 +7,7 @@ import java.awt.*;
  * The JMSView class handles the frontend part of this Application, aka. interaction with the User.
  *
  * @author Andreas Willinger
- * @version 0.1
+ * @version 0.2
  */
 public class JMSView
         extends  JFrame
@@ -54,7 +52,7 @@ public class JMSView
         this.txtContent.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 14));
         this.txtContent.setEditable(false);
         this.txtContent.setLineWrap(true);
-        this.txtCommand.setPreferredSize(new Dimension(450, 30));
+        this.txtCommand.setPreferredSize(new Dimension(500, 30));
 
         this.bSend.addActionListener(this.topicControl);
         this.bSend.addActionListener(this.mailControl);

@@ -3,9 +3,7 @@ package wk.jmschat;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
 import javax.jms.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
+import java.awt.event.*;
 /**
  * The JMSTopicControl class handles the communication between this Application and the Chat Server.
  * To do that, it utilises the <code>JMS Topic</code> technique, in order to simulate a behaviour similar to IRC Chatrooms.
@@ -14,10 +12,10 @@ import java.awt.event.ActionListener;
  * This also happens in the case of an error/exception.
  *
  * @author Andreas Willinger
- * @version 0.4
+ * @version 0.5
  */
 public class JMSTopicControl
-        implements MessageListener, Runnable, ActionListener
+    implements MessageListener, Runnable, ActionListener
 {
     // the JMS connection itself
 	private Connection topicConnection;
@@ -45,6 +43,11 @@ public class JMSTopicControl
     {
         try
         {
+            String sendMessage = String.format("%s@%s %s", this.options.getUsername(), this.options.getIp(), "hat den Chat verlassen.");
+            TextMessage message = this.topicSession.createTextMessage(sendMessage);
+
+            this.topicSender.send(message);
+
             this.topicReceiver.close();
             this.topicSender.close();
             this.topicSession.close();
@@ -141,6 +144,11 @@ public class JMSTopicControl
             // finally, fire up the connection
             this.topicReceiver.setMessageListener(this);
             this.topicConnection.start();
+
+            String sendMessage = String.format("%s@%s %s", this.options.getUsername(), this.options.getIp(), "ist dem Chat beigetreten.");
+            TextMessage message = this.topicSession.createTextMessage(sendMessage);
+
+            this.topicSender.send(message);
         }
         catch(JMSException e)
         {
