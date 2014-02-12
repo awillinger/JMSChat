@@ -102,8 +102,6 @@ public class JMSMailControl
                     break;
                 }
             }
-            //clear text
-            this.text.clearText();
         } else
         //send a mail
         if(words[0].equals("MAIL")) {
@@ -122,12 +120,12 @@ public class JMSMailControl
                 TextMessage message = mailSession.createTextMessage(messageText.toString());
                 producer.send(message);
                 producer.close();
+            } catch (ArrayIndexOutOfBoundsException aioobe) {
+                this.model.appendMessage("Verwendung:");
+                this.model.appendMessage("MAIL <username>@<ip> <message>");
             } catch (JMSException e1) {
                 Logger.getLogger(this.getClass()).info(e1.getMessage());
                 Logger.getLogger(this.getClass()).error(e1.getStackTrace());
-            } finally {
-                //clear text
-                this.text.clearText();
             }
         }
     }
