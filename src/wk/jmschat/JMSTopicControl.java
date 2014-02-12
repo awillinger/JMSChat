@@ -165,7 +165,7 @@ public class JMSTopicControl
 
             this.topicSender.send(message);
         }
-        catch(JMSException e)
+        catch(JMSException | NullPointerException e)
         {
             this.model.appendMessage("SYSTEM: Fehler beim Herstellen der Verbindung zum Chat-Server!");
         }
