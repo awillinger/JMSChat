@@ -52,7 +52,7 @@ public class JMSTopicControl
         }
         catch(JMSException e)
         {
-            this.model.appendMessage("*** Konnte Verbindung nicht trennen!");
+            this.model.appendMessage("SYSTEM: Konnte Verbindung nicht trennen!");
         }
 	}
 
@@ -84,9 +84,9 @@ public class JMSTopicControl
 
                 this.topicSender.send(message);
             }
-            catch(JMSException ex)
+            catch(JMSException | NullPointerException ex)
             {
-                this.model.appendMessage("*** Fehler beim Senden der Nachricht! Bitte ueberpruefen Sie Ihre Netzwerkverbindung!");
+                this.model.appendMessage("SYSTEM: Fehler beim Senden der Nachricht! Bitte ueberpruefen Sie Ihre Netzwerkverbindung!");
             }
         }
     }
@@ -105,7 +105,7 @@ public class JMSTopicControl
             }
             catch(JMSException e)
             {
-                this.model.appendMessage("*** Fehler beim Empfangen der Nachricht!");
+                this.model.appendMessage("SYSTEM: Fehler beim Empfangen der Nachricht!");
             }
         }
     }
@@ -144,7 +144,7 @@ public class JMSTopicControl
         }
         catch(JMSException e)
         {
-            this.model.appendMessage("*** Fehler beim Herstellen der Verbindung zum Chat-Server!");
+            this.model.appendMessage("SYSTEM: Fehler beim Herstellen der Verbindung zum Chat-Server!");
         }
     }
 }

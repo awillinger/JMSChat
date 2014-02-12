@@ -1,5 +1,7 @@
 package wk.jmschat;
 
+import sun.awt.VerticalBagLayout;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -46,11 +48,12 @@ public class JMSView
         this.bSend = new JButton("Senden");
 
         // make the main content box a bit more pretty
-        this.txtContent.setBorder(new EmptyBorder(8,8,8,8));
+        this.txtContent.setBorder(new EmptyBorder(4,4,4,4));
         this.txtContent.setBackground(new Color(140,140,140));
         this.txtContent.setForeground(new Color(255,255,255));
-        this.txtContent.setFont(new Font("Arial", Font.ITALIC, 14));
+        this.txtContent.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 14));
         this.txtContent.setEditable(false);
+        this.txtContent.setLineWrap(true);
         this.txtCommand.setPreferredSize(new Dimension(450, 30));
 
         this.bSend.addActionListener(this.topicControl);
@@ -74,6 +77,8 @@ public class JMSView
         tMail.start();
 
         this.setVisible(true);
+
+        org.apache.log4j.BasicConfigurator.configure();
 	}
 
 	/**
