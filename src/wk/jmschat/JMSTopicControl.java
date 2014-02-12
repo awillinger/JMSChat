@@ -12,9 +12,10 @@ import java.awt.event.*;
  * This also happens in the case of an error/exception.
  *
  * @author Andreas Willinger
- * @version 0.5
+ * @version 0.6
  */
 public class JMSTopicControl
+    extends WindowAdapter
     implements MessageListener, Runnable, ActionListener
 {
     // the JMS connection itself
@@ -53,7 +54,7 @@ public class JMSTopicControl
             this.topicSession.close();
             this.topicConnection.close();
         }
-        catch(JMSException e)
+        catch(JMSException | NullPointerException e)
         {
             this.model.appendMessage("SYSTEM: Konnte Verbindung nicht trennen!");
         }
@@ -75,7 +76,7 @@ public class JMSTopicControl
         }
         else if(currentContent.equalsIgnoreCase("exit"))
         {
-            this.stop();
+            this.text.close();
         }
         // regular chat message
         else
@@ -95,6 +96,10 @@ public class JMSTopicControl
         }
     }
 
+    /**
+     * @see javax.jms.MessageListener#onMessage(javax.jms.Message)
+     */
+
     @Override
     public void onMessage(Message message)
     {
@@ -112,6 +117,15 @@ public class JMSTopicControl
                 this.model.appendMessage("SYSTEM: Fehler beim Empfangen der Nachricht!");
             }
         }
+    }
+
+    /**
+     * @see java.awt.event.WindowAdapter#windowClosing(java.awt.event.WindowEvent)
+     */
+    @Override
+    public void windowClosing(WindowEvent e)
+    {
+        this.stop();
     }
 
     /**

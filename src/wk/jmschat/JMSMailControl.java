@@ -5,11 +5,13 @@ import javax.jms.MessageConsumer;
 import javax.jms.MessageListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 /**
  * @author Jakob Klepp
  */
-public class JMSMailControl implements MessageListener, Runnable, ActionListener {
+public class JMSMailControl extends WindowAdapter implements MessageListener, Runnable, ActionListener {
 
 	private javax.jms.Connection mailConnection;
 
@@ -46,6 +48,13 @@ public class JMSMailControl implements MessageListener, Runnable, ActionListener
     @Override
     public void onMessage(Message message) {
 
+    }
+
+    @Override
+    public void windowClosing(WindowEvent e)
+    {
+        System.out.println("#2 closed");
+        this.stop();
     }
 
     /**

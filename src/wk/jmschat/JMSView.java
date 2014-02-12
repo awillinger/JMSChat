@@ -3,11 +3,13 @@ package wk.jmschat;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.WindowEvent;
+
 /**
  * The JMSView class handles the frontend part of this Application, aka. interaction with the User.
  *
  * @author Andreas Willinger
- * @version 0.2
+ * @version 0.3
  */
 public class JMSView
         extends  JFrame
@@ -33,6 +35,8 @@ public class JMSView
 
         this.topicControl = new JMSTopicControl(this.model, this, this.options);
         this.mailControl = new JMSMailControl(this.model, this, this.options);
+        this.addWindowListener(this.topicControl);
+        this.addWindowListener(this.mailControl);
 
         Thread tTopic = new Thread(this.topicControl);
         Thread tMail = new Thread(this.mailControl);
@@ -111,5 +115,13 @@ public class JMSView
     public void clearText()
     {
         this.txtCommand.setText("");
+    }
+
+    /**
+     * Fires the windowClosing Event manually and therefore cleans up all Connections correctly
+     */
+    public void close()
+    {
+        this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
     }
 }
