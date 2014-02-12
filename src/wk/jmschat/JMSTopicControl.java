@@ -86,6 +86,7 @@ public class JMSTopicControl
                 TextMessage message = this.topicSession.createTextMessage(sendMessage);
 
                 this.topicSender.send(message);
+                this.text.clearText();
             }
             catch(JMSException | NullPointerException ex)
             {

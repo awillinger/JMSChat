@@ -98,11 +98,18 @@ public class JMSView
 	}
 
 	/**
-	 * @see Text#getText()
+	 * Returns the Text which is currentlty in the command field
 	 */
 	public String getText()
     {
 		return this.txtCommand.getText();
 	}
 
+    /**
+     * Clears the command field
+     */
+    public void clearText()
+    {
+        this.txtCommand.setText("");
+    }
 }
