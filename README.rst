@@ -14,7 +14,7 @@ Ihrer Applikation. Das Programm soll folgende Funktionen beinhalten:
 - Benutzer meldet sich mit einem Benutzernamen und dem Namen des Chatrooms an. 
   Beispiel für einen Aufruf:
 
-.. code:: 
+.. code:: plain
 
 	vsdbchat <ip_message_broker> <benutzername> <chatroom>
 
@@ -22,7 +22,7 @@ Ihrer Applikation. Das Programm soll folgende Funktionen beinhalten:
   eine Nachricht senden und empfangen.
   Die Nachricht erscheint in folgendem Format:
 
-.. code:: 
+.. code:: plain
 
 	<benutzername> [<ip_des_benutzers>]: <Nachricht>
 
@@ -32,13 +32,13 @@ Ihrer Applikation. Das Programm soll folgende Funktionen beinhalten:
 
 - Nachricht an das Postfach senden:
 
-.. code:: 
+.. code:: plain
 
 	MAIL <ip_des_benutzers> <nachricht>
 
 - Eignes Postfach abfragen:
 
-.. code:: 
+.. code:: plain
 
 	MAILBOX
 
@@ -137,6 +137,8 @@ Zeitaufzeichnung
 | Channel(JMS-Topic)         |  2014-02-12  |  09:35  |  09:55  |     0:20  | Andreas Willinger  |
 +----------------------------+--------------+---------+---------+-----------+--------------------+
 | Channel(JMS-Topic)/GUI     |  2014-02-12  |  11:20  |  11:35  |     0:15  | Andreas Willinger  |
++----------------------------+--------------+---------+---------+-----------+--------------------+
+| Mail system                |  2014-02-11  |  17:40  |  18:40  |     1:20  | Jakob Klepp        |
 +----------------------------+--------------+---------+---------+-----------+--------------------+
 
 =========
