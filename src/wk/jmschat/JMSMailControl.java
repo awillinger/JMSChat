@@ -60,6 +60,8 @@ public class JMSMailControl
         if(text.startsWith("MAILBOX")) {
             //todo push MAILBOX into JMSModel
             //todo clear Queue
+            //clear text
+            this.text.clearText();
         } else
         if(text.startsWith("MAIL")) {
             Message m = null;
@@ -70,6 +72,9 @@ public class JMSMailControl
                 //todo proper exception handling
                     //maybe logging
                 System.out.println(e1.getMessage());
+            } finally {
+                //clear text
+                this.text.clearText();
             }
         }
     }

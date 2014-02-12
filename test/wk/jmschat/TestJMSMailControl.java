@@ -14,9 +14,21 @@ import java.awt.event.ActionEvent;
  * @author Jakob Klepp
  */
 public class TestJMSMailControl {
+    JMSModel model;
+    Text text;
+    JMSOptions options;
+
+    JMSMailControl mailControl;
     @Before
     public void before() {
-        Assert.fail("Not implemented!");
+        //create JMSModel stub
+        model = ;
+        //create Text stub
+        text = ;
+        //create JMSOptions stub
+        options = ;
+        //create an instance of the tested object
+        mailControl = new JMSMailControl(model, text, options);
     }
 
     @Test
