@@ -4,6 +4,8 @@ import org.apache.activemq.ActiveMQConnectionFactory;
 
 import javax.jms.*;
 import java.awt.event.*;
+import java.util.Arrays;
+
 /**
  * The JMSTopicControl class handles the communication between this Application and the Chat Server.
  * To do that, it utilises the <code>JMS Topic</code> technique, in order to simulate a behaviour similar to IRC Chatrooms.
@@ -29,7 +31,7 @@ public class JMSTopicControl
 	private JMSModel model;
 	private Text text;
 
-    public static String[] chatCommands = new String[]{"exit"};
+    public static String[] chatCommands = new String[]{"EXIT"};
 
 	public JMSTopicControl(JMSModel model, Text textContainer, JMSOptions options)
     {
@@ -79,6 +81,10 @@ public class JMSTopicControl
         else if(currentContent.equalsIgnoreCase("exit"))
         {
             this.text.close();
+        }
+        else if(Arrays.asList(JMSMailControl.KEYWORDS).contains(currentContent.toUpperCase()))
+        {
+            return;
         }
         // regular chat message
         else
