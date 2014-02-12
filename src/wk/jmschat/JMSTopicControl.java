@@ -72,7 +72,7 @@ public class JMSTopicControl
 
         if(currentContent.equals(""))
         {
-            this.model.appendMessage("** Bitte geben Sie eine Nachricht ein!");
+            this.model.appendMessage("Bitte geben Sie eine Nachricht ein!");
         }
         else if(currentContent.equalsIgnoreCase("exit"))
         {
@@ -81,17 +81,24 @@ public class JMSTopicControl
         // regular chat message
         else
         {
-            try
+            if(currentContent.length() < 1000)
             {
-                String sendMessage = String.format("%s@%s: %s", this.options.getUsername(), this.options.getIp(), currentContent);
-                TextMessage message = this.topicSession.createTextMessage(sendMessage);
+                try
+                {
+                    String sendMessage = String.format("%s@%s: %s", this.options.getUsername(), this.options.getIp(), currentContent);
+                    TextMessage message = this.topicSession.createTextMessage(sendMessage);
 
-                this.topicSender.send(message);
-                this.text.clearText();
+                    this.topicSender.send(message);
+                    this.text.clearText();
+                }
+                catch(JMSException | NullPointerException ex)
+                {
+                    this.model.appendMessage("SYSTEM: Fehler beim Senden der Nachricht! Bitte ueberpruefen Sie Ihre Netzwerkverbindung!");
+                }
             }
-            catch(JMSException | NullPointerException ex)
+            else
             {
-                this.model.appendMessage("SYSTEM: Fehler beim Senden der Nachricht! Bitte ueberpruefen Sie Ihre Netzwerkverbindung!");
+                this.model.appendMessage("Ihre Nachricht ist zu lang ("+currentContent.length()+" Zeichen, erlaubt: 1000 Zeichen)!");
             }
         }
     }
