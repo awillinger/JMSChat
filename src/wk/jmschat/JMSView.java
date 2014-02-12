@@ -33,7 +33,6 @@ public class JMSView
         this.setLayout(new BorderLayout());
         this.setSize(new Dimension(800, 600));
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        this.setResizable(false);
 
         this.model = model;
         this.options = options;
@@ -57,17 +56,16 @@ public class JMSView
         this.txtContent.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 14));
         this.txtContent.setEditable(false);
         this.txtContent.setLineWrap(true);
-        this.txtCommand.setPreferredSize(new Dimension(500, 30));
 
         this.bSend.addActionListener(this.topicControl);
         this.bSend.addActionListener(this.mailControl);
-        this.bSend.setPreferredSize(new Dimension(250, 30));
 
         JPanel p1 = new JPanel();
 
-        p1.setLayout(new FlowLayout());
-        p1.add(this.txtCommand);
-        p1.add(this.bSend);
+        p1.setLayout(new BorderLayout());
+        p1.setBorder(new EmptyBorder(4,4,4,4));
+        p1.add(this.txtCommand, BorderLayout.CENTER);
+        p1.add(this.bSend, BorderLayout.EAST);
 
         this.add(new JScrollPane(this.txtContent), BorderLayout.CENTER);
         this.add(p1, BorderLayout.SOUTH);
