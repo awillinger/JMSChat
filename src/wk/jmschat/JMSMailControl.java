@@ -1,8 +1,6 @@
 package wk.jmschat;
 
-import javax.jms.Message;
-import javax.jms.MessageConsumer;
-import javax.jms.MessageListener;
+import javax.jms.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -10,27 +8,37 @@ import java.awt.event.ActionListener;
  * @author Jakob Klepp
  */
 public class JMSMailControl implements MessageListener, Runnable, ActionListener {
-
-	private javax.jms.Connection mailConnection;
-
-	private javax.jms.Session mailSession;
-
-	private javax.jms.MessageListener mailSender;
-
+    /**  */
+	private Connection mailConnection;
+    /**  */
+	private Session mailSession;
+    /**  */
+	private MessageProducer mailSender;
+    /**  */
 	private MessageConsumer mailReceiver;
-
+    /**  */
 	private JMSOptions options;
-
-	private JMSModel jMSModel;
-
+    /**  */
+	private JMSModel model;
+    /**  */
 	private Text text;
 
-	public JMSMailControl(JMSModel model, Text textContainer, JMSOptions options) {
+    private boolean stoped;
 
+    /**
+     *
+     * @param model
+     * @param textContainer
+     * @param options
+     */
+	public JMSMailControl(JMSModel model, Text textContainer, JMSOptions options) {
+        this.model = model;
+        this.text = textContainer;
+        this.options = options;
 	}
 
 	public void stop() {
-
+        stoped = true;
 	}
 
     /**
@@ -40,12 +48,32 @@ public class JMSMailControl implements MessageListener, Runnable, ActionListener
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-
+        String text = this.text.getText();
+        if(text.startsWith("MAILBOX")) {
+            //todo push MAILBOX into JMSModel
+            //todo clear Queue
+        } else
+        if(text.startsWith("MAIL")) {
+            Message m = null;
+            try {
+                m = mailSession.createTextMessage(text);
+                mailSender.send(m);
+            } catch (JMSException e1) {
+                //todo proper exception handling
+                    //maybe logging
+                System.out.println(e1.getMessage());
+            }
+        }
     }
 
+    /**
+     * Invoked when a message arrives.
+     *
+     * @param message Message in box
+     */
     @Override
     public void onMessage(Message message) {
-
+        //todo append Message to Queue
     }
 
     /**
@@ -61,6 +89,19 @@ public class JMSMailControl implements MessageListener, Runnable, ActionListener
      */
     @Override
     public void run() {
+        //todo establish a connection
+        while (!stoped) {
 
+        }
+        try {
+            mailReceiver.close();
+            mailSender.close();
+            mailSession.close();
+            mailConnection.close();
+        } catch (JMSException e1) {
+            //todo proper exception handling
+                //maybe logging
+            System.out.println(e1.getMessage());
+        }
     }
 }
