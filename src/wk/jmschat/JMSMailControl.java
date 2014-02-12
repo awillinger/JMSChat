@@ -9,7 +9,13 @@ import java.awt.event.WindowEvent;
 /**
  * @author Jakob Klepp
  */
-public class JMSMailControl implements MessageListener, Runnable, ActionListener {
+public class JMSMailControl
+        extends WindowAdapter
+        implements MessageListener, Runnable, ActionListener{
+
+    /** Words indicating some special command used by mailsystem */
+    public final static String[] KEYWORDS = {"MAIL", "MAILBOX"};
+
     /**  */
 	private Connection mailConnection;
     /**  */
