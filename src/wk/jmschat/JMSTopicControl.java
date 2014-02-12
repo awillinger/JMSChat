@@ -29,6 +29,8 @@ public class JMSTopicControl
 	private JMSModel model;
 	private Text text;
 
+    public static String[] chatCommands = new String[]{"exit"};
+
 	public JMSTopicControl(JMSModel model, Text textContainer, JMSOptions options)
     {
         this.options = options;
