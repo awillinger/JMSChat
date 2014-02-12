@@ -3,9 +3,7 @@ package wk.jmschat;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
 import javax.jms.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
+import java.awt.event.*;
 /**
  * The JMSTopicControl class handles the communication between this Application and the Chat Server.
  * To do that, it utilises the <code>JMS Topic</code> technique, in order to simulate a behaviour similar to IRC Chatrooms.
@@ -14,10 +12,11 @@ import java.awt.event.ActionListener;
  * This also happens in the case of an error/exception.
  *
  * @author Andreas Willinger
- * @version 0.4
+ * @version 0.6
  */
 public class JMSTopicControl
-        implements MessageListener, Runnable, ActionListener
+    extends WindowAdapter
+    implements MessageListener, Runnable, ActionListener
 {
     // the JMS connection itself
 	private Connection topicConnection;
@@ -45,14 +44,19 @@ public class JMSTopicControl
     {
         try
         {
+            String sendMessage = String.format("%s@%s %s", this.options.getUsername(), this.options.getIp(), "hat den Chat verlassen.");
+            TextMessage message = this.topicSession.createTextMessage(sendMessage);
+
+            this.topicSender.send(message);
+
             this.topicReceiver.close();
             this.topicSender.close();
             this.topicSession.close();
             this.topicConnection.close();
         }
-        catch(JMSException e)
+        catch(JMSException | NullPointerException e)
         {
-            this.model.appendMessage("*** Konnte Verbindung nicht trennen!");
+            this.model.appendMessage("SYSTEM: Konnte Verbindung nicht trennen!");
         }
 	}
 
@@ -68,28 +72,40 @@ public class JMSTopicControl
 
         if(currentContent.equals(""))
         {
-            this.model.appendMessage("** Bitte geben Sie eine Nachricht ein!");
+            this.model.appendMessage("Bitte geben Sie eine Nachricht ein!");
         }
         else if(currentContent.equalsIgnoreCase("exit"))
         {
-            this.stop();
+            this.text.close();
         }
         // regular chat message
         else
         {
-            try
+            if(currentContent.length() < 1000)
             {
-                String sendMessage = String.format("%s@%s: %s", this.options.getUsername(), this.options.getIp(), currentContent);
-                TextMessage message = this.topicSession.createTextMessage(sendMessage);
+                try
+                {
+                    String sendMessage = String.format("%s@%s: %s", this.options.getUsername(), this.options.getIp(), currentContent);
+                    TextMessage message = this.topicSession.createTextMessage(sendMessage);
 
-                this.topicSender.send(message);
+                    this.topicSender.send(message);
+                    this.text.clearText();
+                }
+                catch(JMSException | NullPointerException ex)
+                {
+                    this.model.appendMessage("SYSTEM: Fehler beim Senden der Nachricht! Bitte ueberpruefen Sie Ihre Netzwerkverbindung!");
+                }
             }
-            catch(JMSException ex)
+            else
             {
-                this.model.appendMessage("*** Fehler beim Senden der Nachricht! Bitte ueberpruefen Sie Ihre Netzwerkverbindung!");
+                this.model.appendMessage("Ihre Nachricht ist zu lang ("+currentContent.length()+" Zeichen, erlaubt: 1000 Zeichen)!");
             }
         }
     }
+
+    /**
+     * @see javax.jms.MessageListener#onMessage(javax.jms.Message)
+     */
 
     @Override
     public void onMessage(Message message)
@@ -105,9 +121,18 @@ public class JMSTopicControl
             }
             catch(JMSException e)
             {
-                this.model.appendMessage("*** Fehler beim Empfangen der Nachricht!");
+                this.model.appendMessage("SYSTEM: Fehler beim Empfangen der Nachricht!");
             }
         }
+    }
+
+    /**
+     * @see java.awt.event.WindowAdapter#windowClosing(java.awt.event.WindowEvent)
+     */
+    @Override
+    public void windowClosing(WindowEvent e)
+    {
+        this.stop();
     }
 
     /**
@@ -141,10 +166,15 @@ public class JMSTopicControl
             // finally, fire up the connection
             this.topicReceiver.setMessageListener(this);
             this.topicConnection.start();
+
+            String sendMessage = String.format("%s@%s %s", this.options.getUsername(), this.options.getIp(), "ist dem Chat beigetreten.");
+            TextMessage message = this.topicSession.createTextMessage(sendMessage);
+
+            this.topicSender.send(message);
         }
-        catch(JMSException e)
+        catch(JMSException | NullPointerException e)
         {
-            this.model.appendMessage("*** Fehler beim Herstellen der Verbindung zum Chat-Server!");
+            this.model.appendMessage("SYSTEM: Fehler beim Herstellen der Verbindung zum Chat-Server!");
         }
     }
 }

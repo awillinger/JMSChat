@@ -3,6 +3,8 @@ package wk.jmschat;
 import javax.jms.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 /**
  * @author Jakob Klepp
@@ -74,6 +76,14 @@ public class JMSMailControl implements MessageListener, Runnable, ActionListener
     @Override
     public void onMessage(Message message) {
         //todo append Message to Queue
+
+    }
+
+    @Override
+    public void windowClosing(WindowEvent e)
+    {
+        System.out.println("#2 closed");
+        this.stop();
     }
 
     /**
