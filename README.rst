@@ -148,6 +148,8 @@ Zeitaufzeichnung
 +----------------------------+--------------+---------+---------+-----------+--------------------+
 | Channel/Mail/GUI (fixing)  |  2014-02-13  |  07:55  |  08:50  |     0:55  | Andreas Willinger  |
 +----------------------------+--------------+---------+---------+-----------+--------------------+
+| UML                        |  2014-02-13  |  13:55  |  14:10  |     0:15  | Andreas Willinger  |
++----------------------------+--------------+---------+---------+-----------+--------------------+
 
 =========
 Umsetzung
@@ -274,6 +276,19 @@ Verwendungsbeispiel aus der offiziellen Dokumentation _[10]
     Assert.assertEquals("value", jct.dynamicParams.get("option"));
     Assert.assertEquals(Arrays.asList("a", "b", "c"), jct.parameters);
 
+~~~~~~~~
+Redesign
+~~~~~~~~
+
+Im Laufe der Entwicklung haben wir festgestellt, dass das schließend (via EXIT) ein kleines Redesign benötigt.
+Dazu verwenden wir nun einen WindowListener (bzw. WindowAdapater, da wir nur eine Methode benötigen) um das windowClosing Event zu verarbeiten.
+Außerdem wurde das Text Interface (welches vom JMSView implementiert wird) erweitert, um clearText() und close() Methoden hinzuzufügen.
+
+Bei Aufruf der close() Methode wird ein windowClosing Event manuell ausgelöst, dadurch werden die stop() Methoden in der Channel und Mailbox Klasse aufgerufen.
+Anschließend wird das Fenster geschlossen.
+Beide Klassen werden außerdem in Threads ausgeführt, um das Programm selbst nicht zu behindern.
+
+Die clearText() Methode löscht einfach das Kommandofeld.
 
 =======
 Testing
