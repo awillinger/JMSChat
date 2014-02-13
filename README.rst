@@ -78,6 +78,9 @@ Designüberlegung
   Beim Beenden müssen alle offenen Verbindungen in den jeweiligen Threads geschlossen werden, anschließend kann 
   erst das Programm beendet werden.
 
+.. image:: doc/JMSChat.png
+   :width: 70%
+
 ================
 Aufwandschätzung
 ================
@@ -149,6 +152,10 @@ Zeitaufzeichnung
 | Channel/Mail/GUI (fixing)  |  2014-02-13  |  07:55  |  08:50  |     0:55  | Andreas Willinger  |
 +----------------------------+--------------+---------+---------+-----------+--------------------+
 | UML                        |  2014-02-13  |  13:55  |  14:10  |     0:15  | Andreas Willinger  |
++----------------------------+--------------+---------+---------+-----------+--------------------+
+| Testing                    |  2014-02-13  |  20:00  |  20:30  |     0:30  | Andreas Willinger  |
++----------------------------+--------------+---------+---------+-----------+--------------------+
+| Testing                    |  2014-02-13  |  20:00  |  20:30  |     0:30  | Jakob Klepp        |
 +----------------------------+--------------+---------+---------+-----------+--------------------+
 
 =========
