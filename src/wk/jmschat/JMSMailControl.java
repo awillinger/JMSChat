@@ -66,7 +66,7 @@ public class JMSMailControl
             mailReceiver.close();
             mailSession.close();
             mailConnection.close();
-        } catch (JMSException e1) {
+        } catch (JMSException |NullPointerException e1) {
             //todo proper exception handling
             //maybe logging
             System.out.println(e1.getMessage());
