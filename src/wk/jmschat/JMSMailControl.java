@@ -121,7 +121,6 @@ public class JMSMailControl
                 producer = mailSession.createProducer(destination);
                 //parse input string -> extract message
                 StringBuilder messageText = new StringBuilder("[" + options.getUsername() + "@" + options.getIp() + " -> Me]");
-                System.out.println(words.length);
                 for(int i=2; i<words.length; i++) {
                     messageText.append(" ")
                                .append(words[i]);
