@@ -68,9 +68,7 @@ public class JMSMailControl
             mailSession.close();
             mailConnection.close();
         } catch (JMSException | NullPointerException e1) {
-            //todo proper exception handling
-            //maybe logging
-            System.out.println(e1.getMessage());
+            this.model.appendMessage("Konnte Verbindung nicht trennen!");
         }
 	}
 
@@ -113,11 +111,17 @@ public class JMSMailControl
             Destination destination;
             MessageProducer producer;
             try {
+                if(words.length < 3) {
+                    this.model.appendMessage("Verwendung:");
+                    this.model.appendMessage("MAIL <username>@<ip> <message>");
+                    return;
+                }
                 //opening a message queue
                 destination = mailSession.createQueue(words[1]);
                 producer = mailSession.createProducer(destination);
                 //parse input string -> extract message
                 StringBuilder messageText = new StringBuilder("[" + options.getUsername() + "@" + options.getIp() + " -> Me]");
+                System.out.println(words.length);
                 for(int i=2; i<words.length; i++) {
                     messageText.append(" ")
                                .append(words[i]);
@@ -128,9 +132,6 @@ public class JMSMailControl
 
                 this.model.appendMessage("Nachricht gesendet!");
                 this.text.clearText();
-            } catch (ArrayIndexOutOfBoundsException aioobe) {
-                this.model.appendMessage("Verwendung:");
-                this.model.appendMessage("MAIL <username>@<ip> <message>");
             } catch (JMSException | NullPointerException e1) {
                 Logger.getLogger(this.getClass()).info(e1.getMessage());
                 Logger.getLogger(this.getClass()).error(e1.getStackTrace());
@@ -156,7 +157,6 @@ public class JMSMailControl
     @Override
     public void windowClosing(WindowEvent e)
     {
-        System.out.println("#2 closed");
         this.stop();
     }
 
