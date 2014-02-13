@@ -294,6 +294,81 @@ Die clearText() Methode löscht einfach das Kommandofeld.
 Testing
 =======
 
+Da wir ja einen VPS im Internet verwenden, haben wir das Testen von zu Hause aus durchgeführt. 
+Der Grund dahinter ist, dass die Schul-Firewall den Port 61616 sperrt und dieser nur über einen SSH Tunnel erreichbar wäre.
+Dadurch hätten wir beide auch die selbe Ip (MAILBOX Test wäre aufgrund dessen nicht aussagekräftig).
+
+Zugewiesene IPs (obwohl die benutzernamen relativ eindeutig sein sollten):
+
+**213.47.167.184** - Andreas Willinger
+
+**62.178.207.178** - Jakob Klepp
+
+~~~~~~~
+Starten
+~~~~~~~
+
+Der Aufruf zum starten ist bei beiden beinahe der selbe, mit dem Unterschied, dass die Benutzernamen unterschiedlich sind.
+Anschließend wird direkt eine Nachricht an alle bereits vorhandenen Teilnehmer gesendet, um den neuen Teilnehmer anzukündigen:
+
+.. image:: images/Klepp_Join.jpg
+   :width: 757px
+   :height: 394px
+   
+.. image:: images/Willinger_Start.jpg
+   :width: 677px
+   :height: 342px
+
+.. image:: images/Willinger_Join.jpg
+   :width: 800px
+   :height: 600px
+
+Nun kann freudig losgechattet werden und sobald einer den Raum wieder verlässt, wird dies auch angekündigt:
+
+.. image:: images/Klepp_Leave.jpg
+   :width: 800px
+   :height: 600px
+
+.. image:: images/Willinger_Leave.jpg
+   :width: 800px
+   :height: 600px
+
+Es können auch Nachrichten direkt an einen anderen Benutzer gesandt werden:
+
+**Absender**
+
+.. image:: images/Klepp_Mail.jpg
+   :width: 758px
+   :height: 396px
+
+**Empfänger**
+
+.. image:: images/Willinger_Mailbox.jpg
+   :width: 800px
+   :height: 600px
+
+Der Chat kann auch verlassen werden, ohne die anderen Teilnehmer zu beeinträchtigen (Nachrichten an die Mailbox können später
+abgerufen werden):
+(für Beweis, siehe 2. Punkt)
+
+.. image:: images/Klepp_Exit.jpg
+   :width: 754px
+   :height: 396px
+
+Statstiken im Webinterface:
+
+**Queues**
+
+.. image:: images/Willinger_Queues.jpg
+   :width: 630px
+   :height: 211px
+
+**Topics**
+
+.. image:: images/Willinger_Topics.jpg
+   :width: 626px
+   :height: 242px
+
 =======
 Quellen
 =======
@@ -362,7 +437,7 @@ Quellen
     +-------------+-------------------+------------+
     | Titel       | Autor             | Date       |
     +=============+===================+============+
-    | ###Title### | Andreas Willinger | 11.02.2014 |
+    | ###Title### | Andreas Willinger | 13.02.2014 |
     |             | -- Jakob Klepp    |            |
     +-------------+-------------------+------------+
 
