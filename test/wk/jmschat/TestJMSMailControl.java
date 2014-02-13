@@ -8,7 +8,6 @@ import wk.jmschat.stub.JMSModelStub;
 import wk.jmschat.stub.JMSOptionsStub;
 import wk.jmschat.stub.JMSViewStub;
 
-import javax.jms.Message;
 import java.awt.event.ActionEvent;
 
 /**
@@ -40,13 +39,13 @@ public class TestJMSMailControl {
     }
 
     @Test
-    public void test_actionPerformed(ActionEvent e) {
+    public void test_actionPerformed() {
         ActionEvent event = new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "JUnit Test!");
         mailControl.actionPerformed(event);
     }
 
     @Test
-    public void test_onMessage(Message message) {
+    public void test_onMessage() {
         Assert.fail("Not implemented!");
     }
 

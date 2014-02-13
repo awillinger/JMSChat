@@ -14,7 +14,7 @@ public class JMSOptionsStub
      * @return hostname
      */
     public String getHost(){
-        return "tcp://5.45.97.122:61616";
+        return "tcp://127.0.0.1:61616";
     }
 
     /**

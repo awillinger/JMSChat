@@ -44,6 +44,7 @@ public class JMSMailControl
     /** source for user inputs */
 	private Text text;
 
+    @SuppressWarnings("UnusedDeclaration")
     private boolean stoped;
 
     /**
@@ -66,7 +67,7 @@ public class JMSMailControl
             mailReceiver.close();
             mailSession.close();
             mailConnection.close();
-        } catch (JMSException e1) {
+        } catch (JMSException | NullPointerException e1) {
             //todo proper exception handling
             //maybe logging
             System.out.println(e1.getMessage());
@@ -76,7 +77,7 @@ public class JMSMailControl
     /**
      * Invoked when an action occurs.
      *
-     * @param e
+     * @param e ActionEvent Object, containing message source and some other data
      */
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -85,6 +86,7 @@ public class JMSMailControl
         //check the mailbox
         if(words[0].equals("MAILBOX")) {
             //push MAILBOX into JMSModel
+            int count = 0;
             while (true) {
                 try {
                     //timout of 500 ms
@@ -97,16 +99,19 @@ public class JMSMailControl
                     if(message instanceof TextMessage){
                         TextMessage textMessage = (TextMessage) message;
                         this.model.appendMessage(textMessage.getText());
+                        count++;
                     }
-                } catch (JMSException e1) {
+                } catch (JMSException | NullPointerException e1) {
                     break;
                 }
             }
+            if(count == 0) this.model.appendMessage("Ihre Mailbox enthaelt momentan keine Nachrichten!");
+            this.text.clearText();
         } else
         //send a mail
         if(words[0].equals("MAIL")) {
-            Destination destination=null;
-            MessageProducer producer=null;
+            Destination destination;
+            MessageProducer producer;
             try {
                 //opening a message queue
                 destination = mailSession.createQueue(words[1]);
@@ -120,10 +125,13 @@ public class JMSMailControl
                 TextMessage message = mailSession.createTextMessage(messageText.toString());
                 producer.send(message);
                 producer.close();
+
+                this.model.appendMessage("Nachricht gesendet!");
+                this.text.clearText();
             } catch (ArrayIndexOutOfBoundsException aioobe) {
                 this.model.appendMessage("Verwendung:");
                 this.model.appendMessage("MAIL <username>@<ip> <message>");
-            } catch (JMSException e1) {
+            } catch (JMSException | NullPointerException e1) {
                 Logger.getLogger(this.getClass()).info(e1.getMessage());
                 Logger.getLogger(this.getClass()).error(e1.getStackTrace());
             }
@@ -164,7 +172,7 @@ public class JMSMailControl
             queue = mailSession.createQueue(options.getUsername() + "@" + options.getIp());
             mailReceiver = mailSession.createConsumer(queue);
             //mailReceiver.setMessageListener(this);
-        } catch (JMSException e) {
+        } catch (JMSException | NullPointerException e) {
             Logger.getLogger(this.getClass()).info(e.getMessage());
             Logger.getLogger(this.getClass()).error(e.getStackTrace());
         }
