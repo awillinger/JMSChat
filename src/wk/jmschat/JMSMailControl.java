@@ -81,6 +81,9 @@ public class JMSMailControl
     public void actionPerformed(ActionEvent e) {
         String text = this.text.getText();
         String[] words = text.split(" ");
+
+        if(words.length == 0) return;
+
         //check the mailbox
         if(words[0].equals("MAILBOX")) {
             //push MAILBOX into JMSModel

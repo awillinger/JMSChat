@@ -79,6 +79,8 @@ public class JMSTopicControl
         String currentContent = this.text.getText();
         String[] split = currentContent.split(" ");
 
+        if(split.length == 0) return;
+
         if(currentContent.equals("") || Arrays.asList(JMSMailControl.KEYWORDS).contains(split[0].trim().toUpperCase()))
         {
             // ignore it
