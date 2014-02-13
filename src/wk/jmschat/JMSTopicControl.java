@@ -20,10 +20,13 @@ public class JMSTopicControl
     extends WindowAdapter
     implements MessageListener, Runnable, ActionListener
 {
-    // the JMS connection itself
+    // connection to the activemq server itself
 	private Connection topicConnection;
+    // a unique session, running on the connection above
 	private Session topicSession;
+    // used to send messages
 	private MessageProducer topicSender;
+    // used to receive messages
 	private MessageConsumer topicReceiver;
 
     // general stuff
@@ -31,6 +34,7 @@ public class JMSTopicControl
 	private JMSModel model;
 	private Text text;
 
+    @SuppressWarnings("UnusedDeclaration")
     public static String[] chatCommands = new String[]{"EXIT"};
 
 	public JMSTopicControl(JMSModel model, Text textContainer, JMSOptions options)
@@ -73,18 +77,19 @@ public class JMSTopicControl
     public void actionPerformed(ActionEvent e)
     {
         String currentContent = this.text.getText();
+        String[] split = currentContent.split(" ");
 
-        if(currentContent.equals(""))
+        if(split.length == 0) return;
+
+        if(currentContent.equals("") || Arrays.asList(JMSMailControl.KEYWORDS).contains(split[0].trim().toUpperCase()))
         {
-            this.model.appendMessage("Bitte geben Sie eine Nachricht ein!");
+            // ignore it
+            //noinspection UnnecessaryReturnStatement
+            return;
         }
-        else if(currentContent.equalsIgnoreCase("exit"))
+        else if(split[0].trim().equalsIgnoreCase("exit"))
         {
             this.text.close();
-        }
-        else if(Arrays.asList(JMSMailControl.KEYWORDS).contains(currentContent.toUpperCase()))
-        {
-            return;
         }
         // regular chat message
         else

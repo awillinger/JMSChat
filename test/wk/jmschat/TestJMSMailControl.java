@@ -1,18 +1,15 @@
 package wk.jmschat;
 
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import wk.jmschat.stub.JMSModelStub;
 import wk.jmschat.stub.JMSOptionsStub;
 import wk.jmschat.stub.JMSViewStub;
 
-import javax.jms.Destination;
-import javax.jms.JMSException;
 import javax.jms.Message;
-import javax.jms.TextMessage;
 import java.awt.event.ActionEvent;
-import java.util.Enumeration;
 
 /**
  * Unittest fpr JMSMailControl

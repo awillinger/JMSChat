@@ -66,25 +66,27 @@ public class JMSMailControl
             mailReceiver.close();
             mailSession.close();
             mailConnection.close();
-        } catch (JMSException |NullPointerException e1) {
-            //todo proper exception handling
-            //maybe logging
-            System.out.println(e1.getMessage());
+        } catch (JMSException | NullPointerException e1) {
+            this.model.appendMessage("Konnte Verbindung nicht trennen!");
         }
 	}
 
     /**
      * Invoked when an action occurs.
      *
-     * @param e
+     * @param e ActionEvent Object, containing message source and some other data
      */
     @Override
     public void actionPerformed(ActionEvent e) {
         String text = this.text.getText();
         String[] words = text.split(" ");
+
+        if(words.length == 0) return;
+
         //check the mailbox
         if(words[0].equals("MAILBOX")) {
             //push MAILBOX into JMSModel
+            int count = 0;
             while (true) {
                 try {
                     //timout of 500 ms
@@ -97,17 +99,23 @@ public class JMSMailControl
                     if(message instanceof TextMessage){
                         TextMessage textMessage = (TextMessage) message;
                         this.model.appendMessage(textMessage.getText());
+                        count++;
                     }
-                } catch (JMSException e1) {
+                } catch (JMSException | NullPointerException e1) {
                     break;
                 }
             }
         } else
         //send a mail
         if(words[0].equals("MAIL")) {
-            Destination destination=null;
-            MessageProducer producer=null;
+            Destination destination;
+            MessageProducer producer;
             try {
+                if(words.length < 3) {
+                    this.model.appendMessage("Verwendung:");
+                    this.model.appendMessage("MAIL <username>@<ip> <message>");
+                    return;
+                }
                 //opening a message queue
                 destination = mailSession.createQueue(words[1]);
                 producer = mailSession.createProducer(destination);
@@ -120,10 +128,10 @@ public class JMSMailControl
                 TextMessage message = mailSession.createTextMessage(messageText.toString());
                 producer.send(message);
                 producer.close();
-            } catch (ArrayIndexOutOfBoundsException aioobe) {
-                this.model.appendMessage("Verwendung:");
-                this.model.appendMessage("MAIL <username>@<ip> <message>");
-            } catch (JMSException e1) {
+
+                this.model.appendMessage("Nachricht gesendet!");
+                this.text.clearText();
+            } catch (JMSException | NullPointerException e1) {
                 Logger.getLogger(this.getClass()).info(e1.getMessage());
                 Logger.getLogger(this.getClass()).error(e1.getStackTrace());
             }
@@ -148,7 +156,6 @@ public class JMSMailControl
     @Override
     public void windowClosing(WindowEvent e)
     {
-        System.out.println("#2 closed");
         this.stop();
     }
 
@@ -164,7 +171,7 @@ public class JMSMailControl
             queue = mailSession.createQueue(options.getUsername() + "@" + options.getIp());
             mailReceiver = mailSession.createConsumer(queue);
             //mailReceiver.setMessageListener(this);
-        } catch (JMSException e) {
+        } catch (JMSException | NullPointerException e) {
             Logger.getLogger(this.getClass()).info(e.getMessage());
             Logger.getLogger(this.getClass()).error(e.getStackTrace());
         }
