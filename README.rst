@@ -79,7 +79,7 @@ Designüberlegung
   erst das Programm beendet werden.
 
 .. image:: doc/JMSChat.png
-   :width: 70%
+   :width: 90%
 
 ================
 Aufwandschätzung
