@@ -67,7 +67,7 @@ public class JMSMailControl
             mailSession.close();
             mailConnection.close();
         } catch (JMSException | NullPointerException e1) {
-            this.model.appendMessage("Konnte Verbindung nicht trennen!");
+            this.model.appendMessage("Mailservice: Konnte Verbindung nicht trennen!");
         }
 	}
 
@@ -172,8 +172,7 @@ public class JMSMailControl
             mailReceiver = mailSession.createConsumer(queue);
             //mailReceiver.setMessageListener(this);
         } catch (JMSException | NullPointerException e) {
-            Logger.getLogger(this.getClass()).info(e.getMessage());
-            Logger.getLogger(this.getClass()).error(e.getStackTrace());
+            model.appendMessage("Mailservice: Konnte keine Verbindung aufbauen.");
         }
     }
 

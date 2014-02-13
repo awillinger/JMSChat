@@ -21,7 +21,7 @@ import java.util.Enumeration;
  */
 public class TestJMSMailControl {
     JMSModelStub model;
-    Text text;
+    JMSViewStub text;
     JMSOptionsStub options;
 
     JMSMailControl mailControl;
@@ -42,13 +42,35 @@ public class TestJMSMailControl {
     @Test
     public void test_stop() {
         mailControl.stop();
+
+        //starting it before stopping
+        mailControl.run();
+        mailControl.stop();
     }
 
     @Test
     public void test_actionPerformed() {
+        mailControl.run();
         //command should not make a difference
         ActionEvent event = new ActionEvent(this, ActionEvent.ACTION_PERFORMED, string);
         mailControl.actionPerformed(event);
+
+        //testing the effect of text in imput
+        text.setText("text");
+        mailControl.actionPerformed(event);
+
+        //testing the effect of MAIL in input
+        text.setText("MAIL");
+        mailControl.actionPerformed(event);
+
+        //testing a full MAIL command call in input
+        text.setText("MAIL testuser@8.8.8.8 text");
+        mailControl.actionPerformed(event);
+
+        //testing MAILBOX
+        text.setText("MAILBOX");
+        mailControl.actionPerformed(event);
+
     }
 
     @Test
