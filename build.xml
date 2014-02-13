@@ -52,6 +52,10 @@
     <target name="clean-jd" description="Clean javadocs">
         <delete dir="${jd.dir}" />
     </target>
+    
+    <target name="clean-all" depends="clean, clean-jd" description="Clean everything">
+        <delete dir="${out.dir}/lib" />
+    </target>
 
     <target name="rebuild-jd" depends="clean-jd, create-jd" description="Clean and build Javadoc" />
 
@@ -89,16 +93,15 @@
             <redirector output="${gitlog.dir}/${gitlog.name}" />
         </exec>
     </target>
-
+    
     <target name="jar" depends="rebuild, rebuild-jd, rebuild-protocol, git-log" description="Creates a jar for distribution" >
         <delete file="${jar.dir}/${jar.name}.jar" />
         <copy todir="${build.dir}/src">
             <fileset dir="${src.dir}" />
         </copy>
 
-        <copy todir="${build.dir}">
-            <fileset dir="res" />
-        </copy>
+        <copy file="${lib.dir}/activemq-all-5.8.0.jar" todir="${out.dir}/lib" />
+        <copy file="${lib.dir}/jcommander-1.32.jar" todir="${out.dir}/lib" />
 
         <copy file="build.xml" todir="${build.dir}" />
 
@@ -110,11 +113,13 @@
             </manifest>
         </jar>
     </target>
+    
     <target name="zip" depends="jar">
-        <mkdir dir="${out.dir}/lib/lib" />
-        <copy todir="${out.dir}/lib/lib">
-            <fileset dir="${lib.dir}" />
-        </copy>
+        <copy file="${out.dir}/lib/activemq-all-5.8.0.jar" todir="${out.dir}/lib/lib" />
+        <copy file="${out.dir}/lib/jcommander-1.32.jar" todir="${out.dir}/lib/lib" />
+        <delete file="${out.dir}/lib/activemq-all-5.8.0.jar" />
+        <delete file="${out.dir}/lib/jcommander-1.32.jar" />
+        
         <zip destfile="${jar.dir}/${jar.name}.zip">
             <file file="${jar.dir}/${jar.name}.jar" />
             <fileset dir="${out.dir}/lib" />
